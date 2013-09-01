@@ -1,11 +1,11 @@
 -module(session_simulation).
 -export([run_sim/0, run_sim/3]).
 -include("include/human.hrl").
--define(RETRIES, 10).
--define(BABIES_PER_PERIOD, 100).
--define(GENE_SIZE, 300).
--define(LIFETIME, 100).
--define(END_OF_PERIOD, 100).
+-define(RETRIES, 3).
+-define(BABIES_PER_PERIOD, 500).
+-define(GENE_SIZE, 100000).
+-define(LIFETIME, 200).
+-define(END_OF_PERIOD, (?LIFETIME * 10)).
 
 make_gene(GeneSize) ->
     random:uniform(GeneSize).
@@ -51,5 +51,10 @@ turn(Period, Conflicts, People, BabiesPerPeriod, GeneSize, Lifetime) ->
                     {true, Human}
             end, People2),
     People4 = lists:filter(fun(#human{lives_until=L}) -> L < Period end, People3),
-    io:format("{Period, Conflicted} = {~p, ~p}~n", [Period, Conflicted]),
+    case Period rem 100 of
+        0 ->
+            io:format("{Period, Conflicted} = {~p, ~p}~n", [Period, Conflicted]);
+        _ ->
+            ok
+    end,
     turn(Period + 1, [Conflicted|Conflicts], People4, BabiesPerPeriod, GeneSize, Lifetime).
