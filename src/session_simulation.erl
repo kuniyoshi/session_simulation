@@ -1,6 +1,7 @@
 -module(session_simulation).
 -export([run_sim/0, run_sim/3]).
 -include("include/human.hrl").
+-include_lib("eunit/include/eunit.hrl").
 -define(RETRIES, 3).
 -define(BABIES_PER_PERIOD, 500).
 -define(GENE_SIZE, 100000).
@@ -53,7 +54,8 @@ turn(Period, Conflicts, People, BabiesPerPeriod, GeneSize, Lifetime) ->
     People4 = lists:filter(fun(#human{lives_until=L}) -> L < Period end, People3),
     case Period rem 100 of
         0 ->
-            io:format("{Period, Conflicted} = {~p, ~p}~n", [Period, Conflicted]);
+            ?debugVal(Period),
+            ?debugVal(Conflicted);
         _ ->
             ok
     end,
